@@ -47,7 +47,7 @@ public class Counter extends JFrame {
         });
     }
 
-    private static JFileChooser getjFileChooser() {
+    private JFileChooser getjFileChooser() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
