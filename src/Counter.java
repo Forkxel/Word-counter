@@ -28,25 +28,9 @@ public class Counter extends JFrame {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-                    @Override
-                    public boolean accept(File file) {
-                        if (file.isDirectory()) {
-                            return true;
-                        }
-                        String fileName = file.getName().toLowerCase();
-                        return fileName.endsWith(".pdf") || fileName.endsWith(".docx");
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "PDF and DOCX files";
-                    }
-                });
+                JFileChooser fileChooser = getjFileChooser();
 
                 int returnValue = fileChooser.showOpenDialog(null);
-
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     String fileName = selectedFile.getName().toLowerCase();
@@ -63,7 +47,27 @@ public class Counter extends JFrame {
         });
     }
 
-        private void readPDF(File file) {
+    private static JFileChooser getjFileChooser() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                }
+                String fileName = file.getName().toLowerCase();
+                return fileName.endsWith(".pdf") || fileName.endsWith(".docx");
+            }
+
+            @Override
+            public String getDescription() {
+                return "PDF and DOCX files";
+            }
+        });
+        return fileChooser;
+    }
+
+    private void readPDF(File file) {
         try (PDDocument document = PDDocument.load(file)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
@@ -86,7 +90,6 @@ public class Counter extends JFrame {
             String[] words = filteredText.split("\\s+");
             document.close();
             jlCount.setText(String.valueOf(words.length));
-            System.out.println(text);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
